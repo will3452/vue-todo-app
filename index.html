@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Demo</title>
+    <link rel="stylesheet" href="/node_modules/tailwindcss/dist/tailwind.min.css">
+    <link rel="stylesheet" href="/node_modules/tailwindcss/dist/base.min.css">
+    <link rel="stylesheet" href="/node_modules/tailwindcss/dist/utilities.min.css">
+    <style>
+        .router-link-exact-active{
+            background: rgba(254,243,199);
+            color:black;
+        }
+        .fade-enter-active, .fade-leave-active{
+            transition: all .5s;
+        }
+        .fade-enter, .fade-leave-to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    </style>
+    <script src="/node_modules/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    
+    <div id="app" class="w-screen h-auto max-w-md mx-auto">
+        <h1 class="w-full bg-black text-white py-2 text-center text-2xl font-semibold">MY TODO APP</h1>
+        <nav class="bg-gray-900 text-yellow-100 flex justify-center">
+            <router-link to="/" class="uppercase p-2 hover:bg-yellow-100 hover:text-gray-900">Home</router-link>
+            <router-link to="todo" class=" uppercase p-2 hover:bg-yellow-100 hover:text-gray-900">Todos</router-link>
+            <router-link to="about" class=" uppercase p-2 hover:bg-yellow-100 hover:text-gray-900">About us</router-link>
+        </nav>
+        <router-view></router-view>
+    </div>
+    <script src="/node_modules/vue/dist/vue.js"></script>
+    <script src="node_modules/vue-router/dist/vue-router.js"></script>
+    <script src="/node_modules/vuex/dist/vuex.js"></script>
+    <script src="http://wzrd.in/standalone/uuid%2Fv4@latest"></script>
+
+    <script id="aboutTemplate" type="text/x-template">
+        <div class="text-gray-900 p-2 text-xl text-justify">
+            This App is for demo purpose only, this include Vue, Vuex, VueRouter and tailwindcss. Its also use uuid to generate unique ID and  <a href="https://jsonplaceholder.typicode.com/" target="_blank" class="text-yellow-900" >jsonplaceholder</a> for testing.
+        </div>
+    </script>
+    <script type="text/x-template" id="homeTemplate">
+        <div>
+            <h1 class="text-yellow-900 text-center w-full bg-yellow-100 p-2 mx-auto font-bold text-2xl uppercase">You have {{ todoCount }} Todo </h1>
+        </div>
+    </script>
+    <script type="text/x-template" id="todoInputTemplate">
+        <div>
+            <form action="#" class="w-full" @submit.prevent='addTodo'>
+                <input type="text" class="w-full outline-none text-2xl p-2 focus:bg-yellow-100 focus:placeholder-yellow-900" placeholder="Enter Todo here" v-model="text">
+            </form>
+        </div>
+    </script>
+    <script id="todoListTemplate" type="text/x-template">
+        <div>
+            <ul>
+                <transition-group name="fade">
+                    <li class="flex justify-between p-2 bg-gray-100 text-gray-900 text-xl border-b-2 border-gray-200" v-for="item in todoitems" :key="item.id">
+                        <div>
+                            <input type="checkbox" :checked='item.completed' @change="updateDone(item.id)"> {{ item.title }}
+                        </div>
+                        <div>
+                            <button @click="removeTodo(item.id)" class="w-6 h-6 hover:text-gray-900 text-xl font-semibol flex justify-center items-center rounded-full text-gray-500">
+                                &times;
+                            </button>
+                        </div>
+                    </li>
+                </transition-group>
+            </ul>
+        </div>
+    </script>
+    <script type="text/x-template" id="todoTemplate">
+        <div>
+           
+            <todo-input></todo-input>
+            <div v-if="$store.getters.todoCount == 0" class="h-32 flex w-full justify-center items-center bg-white text-gray-300 text-2xl p-2">
+                NO TODO.
+            </div>
+            <todo-list></todo-list>
+            
+        </div>
+    </script>
+    <script src="/app.js"></script>
+
+</body>
+</html>
